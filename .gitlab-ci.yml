@@ -34,33 +34,34 @@ test:
   needs: ["build"]
   before_script:
     - dotnet --info
-  script:
-    - dotnet restore
-    - dotnet test "$TEST_PROJECT_PATH" -c Release --collect:"XPlat Code Coverage" --logger:"junit;LogFilePath=./artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
     - dotnet tool install --global dotnet-reportgenerator-globaltool
     - export PATH="$PATH:/root/.dotnet/tools"
-    - reportgenerator -reports:"src/**/coverage.cobertura.xml" -targetdir:CoverageResults/Combined -reporttypes:Cobertura,TextSummary
+  script:
+    - dotnet restore
+    - dotnet test "$TEST_PROJECT_PATH" -c Release --collect:"XPlat Code Coverage" --results-directory ./TestResults
     - |
-      set +e
-      if [ -f CoverageResults/Combined/Cobertura.xml ]; then
-        rate=$(grep 'line-rate=' CoverageResults/Combined/Cobertura.xml | head -1 | sed 's/.*line-rate="\([^"]*\)".*/\1/')
-        pct=$(echo "$rate" | awk '{val=$1*100; if (val==int(val)) printf "%.0f", val; else printf "%.1f", val}')
-        echo "Line coverage: ${pct}%"
+      if [ -d ./TestResults ]; then
+        reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:./CoverageResults -reporttypes:Cobertura,TextSummary
+        if [ -f ./CoverageResults/Cobertura.xml ]; then
+          rate=$(grep 'line-rate=' ./CoverageResults/Cobertura.xml | head -1 | sed 's/.*line-rate="\([^"]*\)".*/\1/')
+          pct=$(echo "$rate" | awk '{val=$1*100; if (val==int(val)) printf "%.0f", val; else printf "%.1f", val}')
+          echo "Line coverage: ${pct}%"
+        else
+          echo "Line coverage: 0.0%"
+        fi
       else
+        echo "No test results found"
         echo "Line coverage: 0.0%"
       fi
-      set -e
   artifacts:
     when: always
     paths:
-      - "CoverageResults/Combined/**"
-      - "**/*-test-result.xml"
+      - "TestResults/**"
+      - "CoverageResults/**"
     reports:
-      junit:
-        - "**/*-test-result.xml"
       coverage_report:
         coverage_format: cobertura
-        path: CoverageResults/Combined/Cobertura.xml
+        path: CoverageResults/Cobertura.xml
   coverage: '/Line coverage: (\d+(?:\.\d+)?%)/'
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
