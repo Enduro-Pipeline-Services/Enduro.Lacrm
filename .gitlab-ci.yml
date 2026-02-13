@@ -40,11 +40,12 @@ test:
     - dotnet restore
     - dotnet test "$TEST_PROJECT_PATH" -c Release --collect:"XPlat Code Coverage" --results-directory ./TestResults
     - |
+      set +e
       if [ -d ./TestResults ]; then
         reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:./CoverageResults -reporttypes:Cobertura,TextSummary
         if [ -f ./CoverageResults/Cobertura.xml ]; then
-          rate=$(grep 'line-rate=' ./CoverageResults/Cobertura.xml | head -1 | sed 's/.*line-rate="\([^"]*\)".*/\1/')
-          pct=$(echo "$rate" | awk '{val=$1*100; if (val==int(val)) printf "%.0f", val; else printf "%.1f", val}')
+          rate=$(grep 'line-rate=' ./CoverageResults/Cobertura.xml | head -1 | sed 's/.*line-rate="\([^"]*\)".*/\1/' || echo "0")
+          pct=$(echo "$rate" | awk '{val=$1*100; if (val==int(val)) printf "%.0f", val; else printf "%.1f", val}' || echo "0")
           echo "Line coverage: ${pct}%"
         else
           echo "Line coverage: 0.0%"
@@ -53,6 +54,7 @@ test:
         echo "No test results found"
         echo "Line coverage: 0.0%"
       fi
+      exit 0
   artifacts:
     when: always
     paths:
