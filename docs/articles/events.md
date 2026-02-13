@@ -190,8 +190,7 @@ var response = await lacrm.GetEvent("event-id-here");
 var evt = response.Event;
 
 Console.WriteLine($"Event: {evt.Name}");
-Console.WriteLine($"Date: {evt.Date}");
-Console.WriteLine($"Time: {evt.StartTime} - {evt.EndTime}");
+Console.WriteLine($"Date: {evt.StartDate}");
 Console.WriteLine($"Description: {evt.Description}");
 
 // List attendees
@@ -200,7 +199,7 @@ if (evt.Attendees != null)
     Console.WriteLine("Attendees:");
     foreach (var attendee in evt.Attendees)
     {
-        Console.WriteLine($"  - {attendee.Name}");
+        Console.WriteLine($"  - Attendee ID: {attendee.AttendeeId}");
     }
 }
 ```
@@ -224,7 +223,7 @@ var parameters = new GetEventsParams
 var response = await lacrm.GetEvents(parameters);
 foreach (var evt in response.Result)
 {
-    Console.WriteLine($"{evt.Date} {evt.StartTime}: {evt.Name}");
+    Console.WriteLine($"{evt.StartDate}: {evt.Name}");
 }
 ```
 
@@ -260,9 +259,9 @@ var parameters = new GetEventsParams
 
 var response = await lacrm.GetEvents(parameters);
 
-foreach (var evt in response.Result.OrderBy(e => e.Date).ThenBy(e => e.StartTime))
+foreach (var evt in response.Result.OrderBy(e => e.StartDate))
 {
-    Console.WriteLine($"{evt.Date} {evt.StartTime}: {evt.Name}");
+    Console.WriteLine($"{evt.StartDate}: {evt.Name}");
 }
 ```
 
@@ -292,7 +291,7 @@ var response = await lacrm.GetEventsAttachedToContact("contact-id-here");
 
 foreach (var evt in response.Result)
 {
-    Console.WriteLine($"{evt.Date} at {evt.StartTime}: {evt.Name}");
+    Console.WriteLine($"{evt.StartDate}: {evt.Name}");
 }
 ```
 
@@ -343,13 +342,12 @@ Combine with LINQ to filter after retrieval:
 var response = await lacrm.GetEventsAttachedToContact("contact-id-here");
 
 var upcomingEvents = response.Result
-    .Where(e => DateTime.Parse(e.Date) >= DateTime.Today)
-    .OrderBy(e => e.Date)
-    .ThenBy(e => e.StartTime);
+    .Where(e => DateTime.Parse(e.StartDate) >= DateTime.Today)
+    .OrderBy(e => e.StartDate);
 
 foreach (var evt in upcomingEvents)
 {
-    Console.WriteLine($"{evt.Date} {evt.StartTime}: {evt.Name}");
+    Console.WriteLine($"{evt.StartDate}: {evt.Name}");
 }
 ```
 
@@ -417,7 +415,7 @@ public class EventManager
 
             // Get event details
             var getResponse = await _lacrm.GetEvent(eventId);
-            Console.WriteLine($"Confirmed: {getResponse.Event.Name} on {getResponse.Event.Date}");
+            Console.WriteLine($"Confirmed: {getResponse.Event.Name} on {getResponse.Event.StartDate}");
 
             return;
         }
@@ -438,8 +436,7 @@ public class EventManager
 
         var response = await _lacrm.GetEvents(parameters);
         return response.Result
-            .OrderBy(e => e.Date)
-            .ThenBy(e => e.StartTime)
+            .OrderBy(e => e.StartDate)
             .ToList();
     }
 

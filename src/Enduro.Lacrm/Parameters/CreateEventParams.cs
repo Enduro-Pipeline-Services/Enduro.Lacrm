@@ -8,7 +8,10 @@ namespace Enduro.Lacrm.Parameters
     [PublicAPI]
     public class CreateEventParams : Parameter
     {
-        public CreateEventParams(string date, 
+        private static readonly Regex DateRegex = new Regex("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$", RegexOptions.Compiled);
+        private static readonly Regex TimeRegex = new Regex("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", RegexOptions.Compiled);
+
+        public CreateEventParams(string date,
             string startTime, 
             string endTime, 
             string name,
@@ -45,8 +48,7 @@ namespace Enduro.Lacrm.Parameters
 
         protected virtual ParameterValidationResponse ValidateDate()
         {
-            var valid = new Regex("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$")
-                .IsMatch(Date);
+            var valid = DateRegex.IsMatch(Date);
 
             if (valid)
                 return new ParameterValidationResponse(true);
@@ -57,8 +59,7 @@ namespace Enduro.Lacrm.Parameters
 
         protected virtual ParameterValidationResponse ValidateStartTime()
         {
-            var valid = new Regex("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")
-                .IsMatch(StartTime);
+            var valid = TimeRegex.IsMatch(StartTime);
 
             if (valid)
                 return new ParameterValidationResponse(true);
@@ -69,8 +70,7 @@ namespace Enduro.Lacrm.Parameters
 
         protected virtual ParameterValidationResponse ValidateEndTime()
         {
-            var valid = new Regex("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")
-                .IsMatch(EndTime);
+            var valid = TimeRegex.IsMatch(EndTime);
 
             if (valid)
                 return new ParameterValidationResponse(true);

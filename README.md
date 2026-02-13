@@ -3,7 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Enduro.Lacrm.svg)](https://www.nuget.org/packages/Enduro.Lacrm/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A comprehensive, strongly-typed .NET wrapper for the [Less Annoying CRM API](https://lessannoyingcrm.com/help/topic/API) with over 50 functions covering all major CRM operations.
+A comprehensive, strongly-typed .NET wrapper for the [Less Annoying CRM API](https://lessannoyingcrm.com/help/topic/API) with 37 functions covering all major CRM operations.
 
 ## Features
 
@@ -125,7 +125,7 @@ var lacrm = new LacrmClient(client, options);
 var response = await lacrm.SearchContacts("John Doe");
 foreach (var contact in response.Result)
 {
-    Console.WriteLine($"{contact.FullName} - {contact.Email?.FirstOrDefault()?.Text}");
+    Console.WriteLine($"{contact.FirstName} {contact.LastName} - {contact.Email?.FirstOrDefault()?.Text}");
 }
 ```
 
