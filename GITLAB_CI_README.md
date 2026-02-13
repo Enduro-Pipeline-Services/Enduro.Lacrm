@@ -31,7 +31,7 @@ This GitLab CI/CD pipeline automatically builds, tests, packages, and deploys th
 
 You must configure the following **protected** and **masked** variable in GitLab:
 
-### `NUGET__API__KEY`
+### `NUGET_API_KEY`
 - **Type**: Variable
 - **Value**: Your Nexus NuGet API key
 - **Protected**: ✅ Yes (only available on protected branches)
@@ -41,11 +41,13 @@ You must configure the following **protected** and **masked** variable in GitLab
 ### How to Add the Variable:
 1. Go to your GitLab project: **Settings → CI/CD → Variables**
 2. Click **Add Variable**
-3. Key: `NUGET__API__KEY`
+3. Key: `NUGET_API_KEY`
 4. Value: `[Your Nexus API Key]`
 5. Check **Protect variable** ✅
 6. Check **Mask variable** ✅
 7. Click **Add variable**
+
+**Note**: This project uses `NUGET_API_KEY` (matching other Enduro projects) instead of the double-underscore variant.
 
 ## GitLab Runners
 

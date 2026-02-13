@@ -93,7 +93,7 @@ deploy:
   stage: deploy
   needs: ["package"]
   script:
-    - dotnet nuget push artifacts/nuget/*.nupkg -s https://nexus.enduropls.com/repository/nuget-hosted -k $NUGET__API__KEY
+    - dotnet nuget push artifacts/nuget/*.nupkg -s https://nexus.enduropls.com/repository/nuget-hosted -k $NUGET_API_KEY
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: '$CI_COMMIT_TAG'
