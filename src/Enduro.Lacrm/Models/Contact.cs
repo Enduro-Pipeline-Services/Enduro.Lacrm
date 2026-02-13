@@ -12,7 +12,7 @@ namespace Enduro.Lacrm.Models
             Phone = new HashSet<Phone>();
             Website = new HashSet<Website>();
             Address = new HashSet<Address>();
-            CustomFields = new Dictionary<string, string>();
+            CustomFields = new Dictionary<string, object>();
             ContactCustomFields = new Dictionary<string, string>();
         }
 
@@ -24,7 +24,7 @@ namespace Enduro.Lacrm.Models
             IEnumerable<Website> website,
             IEnumerable<Address> address,
             string birthday,
-            Dictionary<string, string> customFields)
+            Dictionary<string, object> customFields)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -62,8 +62,7 @@ namespace Enduro.Lacrm.Models
 
         public string? ContactData { get; set; }
         public string? EmployeeCount { get; set; }
-        // TODO: Solve this mutability issue. May need to build DTOs.
-        public object CustomFields { get; set; }
+        public Dictionary<string, object>? CustomFields { get; set; }
         public object? ContactCustomFields { get; set; }
     }
 }

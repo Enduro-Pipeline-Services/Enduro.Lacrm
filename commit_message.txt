@@ -1,0 +1,37 @@
+feat!: v2.0.0 - Complete LACRM API v2 support with .NET 10 LTS
+
+BREAKING CHANGES:
+- Upgraded from .NET Standard 2.1 to .NET 10 LTS
+- Enhanced CreateEvent() with new v2 API parameters (IsAllDay, Location, Attendees, Recurring)
+- Updated method signatures to support full API v2 functionality
+
+This major release expands the library from 15 functions to 37+ functions, providing
+complete coverage of the Less Annoying CRM API v2.
+
+Added Features:
+- Task API (5 new): EditTask, DeleteTask, GetTask, GetTasks, GetTasksAttachedToContact
+- Event API (5 new + enhancements): EditEvent, DeleteEvent, GetEvent, GetEvents, GetEventsAttachedToContact
+- Note API (5 new): EditNote, DeleteNote, GetNote, GetNotes, GetNotesAttachedToContact
+- Group API (4 new): CreateGroup, DeleteGroup, GetGroups, RemoveContactFromGroup
+- Pipeline API (2 new): DeletePipelineItem, GetPipelineItem
+- Contact API: Enhanced GetContacts with filtering and searching
+
+Infrastructure:
+- Added comprehensive XML documentation for all public APIs
+- Created full docfx documentation with 9 guides (getting-started, pagination, contacts, events, tasks, notes, groups, pipelines, error-handling)
+- Added migration guide from v1 to v2
+- Created test suite with 31+ unit and integration tests
+- Added pagination support across all list endpoints
+- Updated .gitignore for .NET development best practices
+
+Documentation:
+- Complete API reference documentation
+- Comprehensive user guides for all modules
+- Code examples throughout
+- Migration guide with side-by-side comparisons
+- Error handling best practices
+
+This release provides enterprise-ready functionality for production use with
+comprehensive documentation, testing, and full API coverage.
+
+Ref: CHANGELOG.md

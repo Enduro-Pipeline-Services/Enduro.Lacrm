@@ -37,6 +37,8 @@ namespace Enduro.Lacrm
         private const string ApiError =
             "API Response did not indicate success.";
 
+        private const int DefaultMaxResults = 500;
+
         private JsonSerializerOptions _opt;
 
         public LacrmClient(HttpClient client, Options options)
@@ -46,7 +48,7 @@ namespace Enduro.Lacrm
                 .AddParameter(ApiToken, options.ApiToken)
                 .AddParameter(UserCode, options.UserCode);
             
-            _opt = new JsonSerializerOptions {IgnoreNullValues = true};
+            _opt = new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull };
             _opt.Converters.Add(new NumberToStringConverter());
         }
 
@@ -137,6 +139,15 @@ namespace Enduro.Lacrm
                 .Replace("\"Options\":[]", "\"Options\":{}");
         }
 
+        /// <summary>
+        /// Creates a new contact in Less Annoying CRM.
+        /// </summary>
+        /// <param name="parameters">The contact creation parameters including name, email, phone, and other details</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the newly created contact ID</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<CreateContactResponse> CreateContact(
             CreateContactParams parameters,
             CancellationToken cancellationToken = default)
@@ -147,6 +158,15 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieves a single contact by its unique identifier.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact to retrieve</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the requested contact details</returns>
+        /// <exception cref="ValidationException">Thrown when contact ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error or contact not found</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public async Task<GetContactResponse> GetContact(
             string contactId,
             CancellationToken cancellationToken = default)
@@ -157,6 +177,15 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Updates an existing contact in Less Annoying CRM.
+        /// </summary>
+        /// <param name="parameters">The contact update parameters including contact ID and fields to modify</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the edit operation</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<EditContactResponse> EditContact(
             EditContactParams parameters,
             CancellationToken cancellationToken = default)
@@ -167,6 +196,15 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Deletes a contact from Less Annoying CRM.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact to delete</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the delete operation</returns>
+        /// <exception cref="ValidationException">Thrown when contact ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<DeleteContactResponse> DeleteContact(
             string contactId,
             CancellationToken cancellationToken = default)
@@ -177,6 +215,18 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Searches for contacts using text search with optional filtering and sorting.
+        /// </summary>
+        /// <param name="searchTerms">The search terms to find contacts</param>
+        /// <param name="numRows">Optional maximum number of results to return</param>
+        /// <param name="sort">Optional sort field (e.g., "FullName", "DateCreated")</param>
+        /// <param name="recordType">Optional record type filter (e.g., "Person", "Company")</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing a collection of contacts matching the search criteria</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<SearchContactsResponse> SearchContacts(
             string searchTerms,
             int? numRows = null,
@@ -192,6 +242,16 @@ namespace Enduro.Lacrm
                 function, cancellationToken);
         }
 
+        /// <summary>
+        /// Creates a new note attached to a contact.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="note">The note text content</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the newly created note ID</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<CreateNoteResponse> CreateNote(
             string contactId,
             string note,
@@ -204,6 +264,19 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Creates a new task in Less Annoying CRM.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact to associate with the task</param>
+        /// <param name="dueDate">The task due date in YYYY-MM-DD format</param>
+        /// <param name="name">The task name/title</param>
+        /// <param name="description">The task description</param>
+        /// <param name="assignedTo">Optional user code to assign the task to</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the newly created task ID</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<CreateTaskResponse> CreateTask(
             string contactId,
             string dueDate,
@@ -224,6 +297,21 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Creates a new calendar event in Less Annoying CRM.
+        /// </summary>
+        /// <param name="date">The event date in YYYY-MM-DD format</param>
+        /// <param name="startTime">The start time in HH:MM format (24-hour)</param>
+        /// <param name="endTime">The end time in HH:MM format (24-hour)</param>
+        /// <param name="name">The event name/title</param>
+        /// <param name="description">Optional event description</param>
+        /// <param name="contacts">Optional array of contact IDs to invite</param>
+        /// <param name="users">Optional array of user codes to invite</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the newly created event ID</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<CreateEventResponse> CreateEvent(
             string date,
             string startTime,
@@ -247,6 +335,16 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Adds a contact to a group for categorization.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="groupName">The name of the group to add the contact to</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the operation</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<AddContactToGroupResponse> AddContactGroup(
             string contactId,
             string groupName,
@@ -258,6 +356,20 @@ namespace Enduro.Lacrm
                 function, cancellationToken);
         }
 
+        /// <summary>
+        /// Creates a new pipeline item (opportunity) for a contact.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="pipelineId">The unique identifier of the pipeline</param>
+        /// <param name="statusId">The initial status ID within the pipeline</param>
+        /// <param name="note">Optional note about the pipeline item</param>
+        /// <param name="priority">Optional priority level (numeric)</param>
+        /// <param name="customFields">Optional custom field values as key-value pairs</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the newly created pipeline item ID</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<CreatePipelineResponse> CreatePipeline(
             string contactId,
             string pipelineId,
@@ -279,6 +391,19 @@ namespace Enduro.Lacrm
                 function, cancellationToken);
         }
 
+        /// <summary>
+        /// Updates an existing pipeline item's status, priority, or custom fields.
+        /// </summary>
+        /// <param name="pipelineItemId">The unique identifier of the pipeline item to update</param>
+        /// <param name="statusId">The new status ID to move the item to</param>
+        /// <param name="note">Optional note about the status change</param>
+        /// <param name="priority">Optional new priority level</param>
+        /// <param name="customFields">Optional custom field updates as key-value pairs</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the update operation</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<UpdatePipelineItemResponse> UpdatePipelineItem(
             string pipelineItemId,
             string statusId,
@@ -294,6 +419,15 @@ namespace Enduro.Lacrm
                 UpdatePipelineItemResponse>(function, cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieves all pipeline items associated with a specific contact.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing a collection of pipeline items for the contact</returns>
+        /// <exception cref="ValidationException">Thrown when contact ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<GetPipelineItemsAttachedToContactResponse>
             GetPipelineItemsAttachedToContact(
                 string contactId,
@@ -307,6 +441,21 @@ namespace Enduro.Lacrm
                 preprocess: false);
         }
 
+        /// <summary>
+        /// Retrieves a pipeline report with filtering and sorting options.
+        /// </summary>
+        /// <param name="pipelineId">The unique identifier of the pipeline</param>
+        /// <param name="sortBy">The field to sort by (e.g., "Priority", "DateCreated")</param>
+        /// <param name="numRows">Optional maximum number of results to return</param>
+        /// <param name="page">Optional page number for pagination (default is 1)</param>
+        /// <param name="sortDirection">Optional sort direction ("ASC" or "DESC")</param>
+        /// <param name="userFilter">Optional user code to filter by assigned user</param>
+        /// <param name="statusFilter">Optional status ID to filter by status</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing pipeline items matching the filter criteria</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<GetPipelineReportResponse> GetPipelineReport(
             string pipelineId,
             string sortBy,
@@ -330,6 +479,13 @@ namespace Enduro.Lacrm
                 function, cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieves all pipeline configurations and settings for the account.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing all pipeline settings including statuses and custom fields</returns>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public async Task<GetPipelineSettingsResponse> GetPipelineSettings(
             CancellationToken cancellationToken = default)
         {
@@ -350,6 +506,13 @@ namespace Enduro.Lacrm
             return new GetPipelineSettingsResponse(settings);
         }
 
+        /// <summary>
+        /// Retrieves current user account information and settings.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing user information and account details</returns>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<GetUserInfoResponse> GetUserInfo(
             CancellationToken cancellationToken = default)
         {
@@ -359,6 +522,13 @@ namespace Enduro.Lacrm
                 cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieves all custom field definitions configured in the account.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing all custom field configurations</returns>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
         public Task<GetCustomFieldsResponse> GetCustomFields(
             CancellationToken cancellationToken = default)
         {
@@ -366,6 +536,431 @@ namespace Enduro.Lacrm
 
             return CallApi<GetCustomFieldsParams, GetCustomFieldsResponse>(
                 function, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates an existing task in Less Annoying CRM.
+        /// </summary>
+        /// <param name="parameters">The task update parameters including task ID and fields to modify</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the edit operation</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<EditTaskResponse> EditTask(
+            EditTaskParams parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new EditTask(parameters);
+
+            return CallApi<EditTaskParams, EditTaskResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes a task from Less Annoying CRM.
+        /// </summary>
+        /// <param name="taskId">The unique identifier of the task to delete</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the delete operation</returns>
+        /// <exception cref="ValidationException">Thrown when task ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<DeleteTaskResponse> DeleteTask(
+            string taskId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new DeleteTask(taskId);
+
+            return CallApi<DeleteTaskParams, DeleteTaskResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves a single task by its unique identifier.
+        /// </summary>
+        /// <param name="taskId">The unique identifier of the task to retrieve</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the requested task details</returns>
+        /// <exception cref="ValidationException">Thrown when task ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error or task not found</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetTaskResponse> GetTask(
+            string taskId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetTask(taskId);
+
+            return CallApi<GetTaskParams, GetTaskResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves multiple tasks with optional filtering and pagination.
+        /// </summary>
+        /// <param name="parameters">Filter parameters including date range, assignee, pagination settings</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing a collection of tasks matching the filter criteria</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetTasksResponse> GetTasks(
+            GetTasksParams parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetTasks(parameters);
+
+            return CallApi<GetTasksParams, GetTasksResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves all tasks associated with a specific contact.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="maxNumberOfResults">Maximum number of results per page (default: 500)</param>
+        /// <param name="page">Page number for pagination (1-based)</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing tasks attached to the specified contact</returns>
+        /// <exception cref="ValidationException">Thrown when contact ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetTasksAttachedToContactResponse> GetTasksAttachedToContact(
+            string contactId,
+            int? maxNumberOfResults = null,
+            int? page = null,
+            CancellationToken cancellationToken = default)
+        {
+            var parameters = new GetTasksAttachedToContactParams(contactId)
+            {
+                MaxNumberOfResults = maxNumberOfResults ?? 500,
+                Page = page
+            };
+            var function = new GetTasksAttachedToContact(parameters);
+
+            return CallApi<GetTasksAttachedToContactParams,
+                GetTasksAttachedToContactResponse>(function, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates an existing calendar event in Less Annoying CRM.
+        /// </summary>
+        /// <param name="parameters">The event update parameters including event ID and fields to modify</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the edit operation</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<EditEventResponse> EditEvent(
+            EditEventParams parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new EditEvent(parameters);
+
+            return CallApi<EditEventParams, EditEventResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes a calendar event from Less Annoying CRM.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event to delete</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the delete operation</returns>
+        /// <exception cref="ValidationException">Thrown when event ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<DeleteEventResponse> DeleteEvent(
+            string eventId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new DeleteEvent(eventId);
+
+            return CallApi<DeleteEventParams, DeleteEventResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves a single calendar event by its unique identifier.
+        /// </summary>
+        /// <param name="eventId">The unique identifier of the event to retrieve</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the requested event details</returns>
+        /// <exception cref="ValidationException">Thrown when event ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error or event not found</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetEventResponse> GetEvent(
+            string eventId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetEvent(eventId);
+
+            return CallApi<GetEventParams, GetEventResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves multiple events with optional filtering and pagination.
+        /// </summary>
+        /// <param name="parameters">Filter parameters including date range, contact ID, pagination settings</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing a collection of events matching the filter criteria</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetEventsResponse> GetEvents(
+            GetEventsParams parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetEvents(parameters);
+
+            return CallApi<GetEventsParams, GetEventsResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves all calendar events associated with a specific contact.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="maxNumberOfResults">Maximum number of results per page (default: 500)</param>
+        /// <param name="page">Page number for pagination (1-based)</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing events attached to the specified contact</returns>
+        /// <exception cref="ValidationException">Thrown when contact ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetEventsAttachedToContactResponse> GetEventsAttachedToContact(
+            string contactId,
+            int? maxNumberOfResults = null,
+            int? page = null,
+            CancellationToken cancellationToken = default)
+        {
+            var parameters = new GetEventsAttachedToContactParams(contactId)
+            {
+                MaxNumberOfResults = maxNumberOfResults ?? 500,
+                Page = page
+            };
+            var function = new GetEventsAttachedToContact(parameters);
+
+            return CallApi<GetEventsAttachedToContactParams,
+                GetEventsAttachedToContactResponse>(function, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates an existing note in Less Annoying CRM.
+        /// </summary>
+        /// <param name="parameters">The note update parameters including note ID and new content</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the edit operation</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<EditNoteResponse> EditNote(
+            EditNoteParams parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new EditNote(parameters);
+
+            return CallApi<EditNoteParams, EditNoteResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes a note from Less Annoying CRM.
+        /// </summary>
+        /// <param name="noteId">The unique identifier of the note to delete</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the delete operation</returns>
+        /// <exception cref="ValidationException">Thrown when note ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<DeleteNoteResponse> DeleteNote(
+            string noteId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new DeleteNote(noteId);
+
+            return CallApi<DeleteNoteParams, DeleteNoteResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves a single note by its unique identifier.
+        /// </summary>
+        /// <param name="noteId">The unique identifier of the note to retrieve</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the requested note details</returns>
+        /// <exception cref="ValidationException">Thrown when note ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error or note not found</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetNoteResponse> GetNote(
+            string noteId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetNote(noteId);
+
+            return CallApi<GetNoteParams, GetNoteResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves multiple notes with optional filtering and pagination.
+        /// </summary>
+        /// <param name="parameters">Filter parameters including date range, contact ID, pagination settings</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing a collection of notes matching the filter criteria</returns>
+        /// <exception cref="ValidationException">Thrown when parameters fail validation</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetNotesResponse> GetNotes(
+            GetNotesParams parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetNotes(parameters);
+
+            return CallApi<GetNotesParams, GetNotesResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves all notes associated with a specific contact.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="maxNumberOfResults">Maximum number of results per page (default: 500)</param>
+        /// <param name="page">Page number for pagination (1-based)</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing notes attached to the specified contact</returns>
+        /// <exception cref="ValidationException">Thrown when contact ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetNotesAttachedToContactResponse> GetNotesAttachedToContact(
+            string contactId,
+            int? maxNumberOfResults = null,
+            int? page = null,
+            CancellationToken cancellationToken = default)
+        {
+            var parameters = new GetNotesAttachedToContactParams(contactId)
+            {
+                MaxNumberOfResults = maxNumberOfResults ?? 500,
+                Page = page
+            };
+            var function = new GetNotesAttachedToContact(parameters);
+
+            return CallApi<GetNotesAttachedToContactParams,
+                GetNotesAttachedToContactResponse>(function, cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes a pipeline item, removing a contact from a pipeline.
+        /// </summary>
+        /// <param name="pipelineItemId">The unique identifier of the pipeline item to delete</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the delete operation</returns>
+        /// <exception cref="ValidationException">Thrown when pipeline item ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<DeletePipelineItemResponse> DeletePipelineItem(
+            string pipelineItemId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new DeletePipelineItem(pipelineItemId);
+
+            return CallApi<DeletePipelineItemParams, DeletePipelineItemResponse>(
+                function, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves a single pipeline item by its unique identifier.
+        /// </summary>
+        /// <param name="pipelineItemId">The unique identifier of the pipeline item to retrieve</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the requested pipeline item details</returns>
+        /// <exception cref="ValidationException">Thrown when pipeline item ID is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error or item not found</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetPipelineItemResponse> GetPipelineItem(
+            string pipelineItemId,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetPipelineItem(pipelineItemId);
+
+            return CallApi<GetPipelineItemParams, GetPipelineItemResponse>(
+                function, cancellationToken);
+        }
+
+        /// <summary>
+        /// Removes a contact from a group.
+        /// </summary>
+        /// <param name="contactId">The unique identifier of the contact</param>
+        /// <param name="groupName">The name of the group to remove the contact from</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the removal operation</returns>
+        /// <exception cref="ValidationException">Thrown when parameters are invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<RemoveContactFromGroupResponse> RemoveContactFromGroup(
+            string contactId,
+            string groupName,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new RemoveContactFromGroup(contactId, groupName);
+
+            return CallApi<RemoveContactFromGroupParams, 
+                RemoveContactFromGroupResponse>(function, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves all groups in the LACRM account.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing a collection of all groups</returns>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<GetGroupsResponse> GetGroups(
+            CancellationToken cancellationToken = default)
+        {
+            var function = new GetGroups();
+
+            return CallApi<GetGroupsParams, GetGroupsResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates a new group in Less Annoying CRM.
+        /// </summary>
+        /// <param name="groupName">The name for the new group</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response containing the ID of the newly created group</returns>
+        /// <exception cref="ValidationException">Thrown when group name is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error (e.g., group already exists)</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<CreateGroupResponse> CreateGroup(
+            string groupName,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new CreateGroup(groupName);
+
+            return CallApi<CreateGroupParams, CreateGroupResponse>(function,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes a group from Less Annoying CRM. Contacts in the group are not deleted.
+        /// </summary>
+        /// <param name="groupIdOrName">The unique identifier or name of the group to delete</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>Response indicating success of the delete operation</returns>
+        /// <exception cref="ValidationException">Thrown when group identifier is invalid</exception>
+        /// <exception cref="ApiException">Thrown when the API returns an error</exception>
+        /// <exception cref="HttpException">Thrown when HTTP communication fails</exception>
+        public Task<DeleteGroupResponse> DeleteGroup(
+            string groupIdOrName,
+            CancellationToken cancellationToken = default)
+        {
+            var function = new DeleteGroup(groupIdOrName);
+
+            return CallApi<DeleteGroupParams, DeleteGroupResponse>(function,
+                cancellationToken);
         }
     }
 }
