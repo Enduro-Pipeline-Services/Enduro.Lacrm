@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enduro.Lacrm", "src\Enduro.Lacrm\Enduro.Lacrm.csproj", "{F601F25C-0381-4D86-9E5B-0E26BE6642B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enduro.Lacrm.Tests", "src\Enduro.Lacrm.Tests\Enduro.Lacrm.Tests.csproj", "{A1B2C3D4-5678-90AB-CDEF-123456789ABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{F601F25C-0381-4D86-9E5B-0E26BE6642B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F601F25C-0381-4D86-9E5B-0E26BE6642B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F601F25C-0381-4D86-9E5B-0E26BE6642B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

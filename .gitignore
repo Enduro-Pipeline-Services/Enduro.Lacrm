@@ -1,5 +1,11 @@
 bin/
 obj/
+.vs/
+*.user
+*.suo
+TestResults/
+*.coveragexml
+_site/
 .idea/
 /packages/
 riderModule.iml

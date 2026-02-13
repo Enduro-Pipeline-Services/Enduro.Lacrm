@@ -1,23 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <Title>LACRM API Wrapper</Title>
         <Authors>Jerrett Davis</Authors>
-        <Description>A simple C# wrapper around the Less Annoying CRM API</Description>
-        <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
-        <PackageVersion>1.0.1</PackageVersion>
+        <Description>A comprehensive C# wrapper around the Less Annoying CRM API v2 with full endpoint support</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageVersion>2.0.0</PackageVersion>
         <Company>Enduro Pipeline Services</Company>
-        <AssemblyVersion>1.0.1</AssemblyVersion>
-        <FileVersion>1.0.1</FileVersion>
+        <AssemblyVersion>2.0.0</AssemblyVersion>
+        <FileVersion>2.0.0</FileVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-      <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+      <InternalsVisibleTo Include="Enduro.Lacrm.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+      <PackageReference Include="System.Text.Json" Version="10.0.0" />
     </ItemGroup>
 
 </Project>

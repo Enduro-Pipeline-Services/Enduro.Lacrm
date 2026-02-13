@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Enduro.Lacrm.Models;
 using JetBrains.Annotations;
 
 namespace Enduro.Lacrm.Parameters
@@ -28,13 +29,19 @@ namespace Enduro.Lacrm.Parameters
             Validators.Add(ValidateEndTime);
         }
 
-        public string Date { get; }
-        public string StartTime { get; }
-        public string EndTime { get; }
-        public string Name { get; }
-        public string? Description { get; }
-        public IEnumerable<string>? Contacts { get; }
-        public IEnumerable<string>? Users { get; }
+        public string Date { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public IEnumerable<string>? Contacts { get; set; }
+        public IEnumerable<string>? Users { get; set; }
+        public bool? IsAllDay { get; set; }
+        public string? Location { get; set; }
+        public IEnumerable<Attendee>? Attendees { get; set; }
+        public bool? IsRecurring { get; set; }
+        public string? RecurrenceRule { get; set; }
+        public string? EndRecurrenceDate { get; set; }
 
         protected virtual ParameterValidationResponse ValidateDate()
         {
